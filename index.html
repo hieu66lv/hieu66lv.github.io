@@ -1139,7 +1139,7 @@ async function checkForUpdates(){
   btn.disabled=true;btn.textContent="\u23F3 Dang kiem tra...";
   result.style.display="block";result.innerHTML="Dang ket noi toi Garena...";
   try{
-    var resp=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent("https://lienquan.garena.vn/hoc-vien/tuong-skin/"));
+    var resp=await fetch("https://tempbox-email.netlify.app/api/garena-heroes");
     if(!resp.ok)throw new Error("HTTP "+resp.status);
     var html=await resp.text();
     var doc=new DOMParser().parseFromString(html,"text/html");
