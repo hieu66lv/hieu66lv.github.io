@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -1136,7 +1136,7 @@ function updateVNClock(){var d=new Date(new Date().toLocaleString("en-US",{timeZ
 async function checkForUpdates(){
   var btn=document.getElementById("checkUpdateBtn");
   var result=document.getElementById("updateResult");
-  btn.disabled=true;btn.textContent="\u23F3 Dang kiem tra...";
+  btn.disabled=true;btn.textContent="⏳ Dang kiem tra...";
   result.style.display="block";result.innerHTML="Dang ket noi toi Garena...";
   try{
     var resp=await fetch("https://tempbox-email.netlify.app/api/garena-heroes");
@@ -1150,21 +1150,26 @@ async function checkForUpdates(){
       var match=href.match(/\/d\/([^\/]+)\/?$/);
       if(match)onlineHeroes.push({name:item.textContent.trim(),slug:match[1]});
     });
-    var currentCards=document.querySelectorAll(".hero-card");
-    var currentCount=currentCards.length;
     var onlineCount=onlineHeroes.length;
-    var currentNames=new Set();
-    currentCards.forEach(function(card){var n=card.querySelector(".name");if(n)currentNames.add(n.textContent.trim());});
+    var currentCount=heroesData.length;
+    var currentSkinCount=heroesData.reduce(function(sum,h){return sum+(h.skins?h.skins.length:0);},0);
+    var currentNames=new Set(heroesData.map(function(h){return h.name;}));
     var newHeroes=onlineHeroes.filter(function(h){return!currentNames.has(h.name);});
+    var out='<b>📊 Thống kê hiện tại:</b><br>';
+    out+='🧑 Tướng: <b>'+currentCount+'</b> | 🎨 Trang phục: <b>'+currentSkinCount+'</b><br><br>';
     if(newHeroes.length>0){
-      result.innerHTML='<span class="update-new">\u2705 Phat hien '+newHeroes.length+' tuong moi!</span><br>Online: '+onlineCount+' | Hien tai: '+currentCount+'<ul>'+newHeroes.map(function(h){return"<li>"+h.name+"</li>";}).join("")+"</ul><br><small>Chay <code>python auto_update.py</code> roi push len GitHub de cap nhat.</small>";
+      out+='<span class="update-new">✅ Phát hiện '+newHeroes.length+' tướng mới trên Garena!</span><br>';
+      out+='Online: '+onlineCount+' tướng<ul>'+newHeroes.map(function(h){return"<li>"+h.name+"</li>";}).join("")+"</ul>";
+      out+='<br><small>Chạy <code>python auto_update.py --check-skins</code> rồi push lên GitHub để cập nhật.</small>';
     }else{
-      result.innerHTML='<span class="update-none">\u2714\uFE0F Da cap nhat moi nhat!</span><br>Online: '+onlineCount+' tuong | Hien tai: '+currentCount+' tuong';
+      out+='<span class="update-none">✔️ Đã cập nhật đầy đủ tướng!</span> (Online: '+onlineCount+')';
+      out+='<br><small>Dùng <code>python auto_update.py --check-skins</code> để kiểm tra skin mới.</small>';
     }
+    result.innerHTML=out;
   }catch(e){
-    result.innerHTML="\u274C Loi: "+e.message+"<br><small>Thu lai sau.</small>";
+    result.innerHTML="❌ Lỗi: "+e.message+"<br><small>Thử lại sau.</small>";
   }
-  btn.disabled=false;btn.innerHTML="&#128260; Check cap nhat";
+  btn.disabled=false;btn.innerHTML="&#128260; Check cập nhật";
 }
 </script>
 </body>
