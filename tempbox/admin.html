@@ -1,61 +1,137 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TempBox Admin Panel</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TempBox Admin</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
   <style>
-    :root { --bg:#0f1117; --card:#1b1f2b; --border:#2a2f3e; --text:#e7eaf0; --dim:#9aa3b2; --faint:#6b7384; --accent:#6c8cff; --green:#38d39f; --red:#ff6b6b; --orange:#ffb347; --radius:12px; }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; padding:0; }
-    a { color:var(--accent); text-decoration:none; }
+    :root {
+      --bg: #09090b;
+      --surface: #111113;
+      --elevated: #1a1a1f;
+      --border: rgba(255,255,255,0.07);
+      --text: #fafafa;
+      --text-2: #a1a1aa;
+      --text-3: #71717a;
+      --accent: #6366f1;
+      --green: #10b981;
+      --red: #ef4444;
+      --orange: #f59e0b;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    .header { background:var(--card); border-bottom:1px solid var(--border); padding:16px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
-    .header h1 { font-size:1.2rem; display:flex; align-items:center; gap:10px; }
-    .header nav { display:flex; gap:16px; font-size:0.9rem; }
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header h1 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+    .header nav { display: flex; gap: 14px; font-size: 0.85rem; }
+    .header nav a { color: var(--text-3); font-weight: 500; }
+    .header nav a:hover { color: var(--text); text-decoration: none; }
 
-    .container { max-width:1000px; margin:0 auto; padding:24px; }
+    .container { max-width: 960px; margin: 0 auto; padding: 24px; }
 
-    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:28px; }
-    .stat-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
-    .stat-card .stat-value { font-size:2rem; font-weight:800; margin:4px 0; }
-    .stat-card .stat-label { font-size:0.82rem; color:var(--faint); text-transform:uppercase; letter-spacing:0.06em; }
-    .stat-card.green .stat-value { color:var(--green); }
-    .stat-card.blue .stat-value { color:var(--accent); }
-    .stat-card.orange .stat-value { color:var(--orange); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .stat-card .stat-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-3); }
+    .stat-card .stat-value { font-size: 1.8rem; font-weight: 800; margin-top: 4px; }
+    .stat-card.green .stat-value { color: var(--green); }
+    .stat-card.blue .stat-value { color: var(--accent); }
+    .stat-card.orange .stat-value { color: var(--orange); }
 
-    .section { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:20px; overflow:hidden; }
-    .section-head { padding:16px 20px; border-bottom:1px solid var(--border); font-weight:700; font-size:0.95rem; display:flex; align-items:center; justify-content:space-between; }
-    .section-body { padding:16px 20px; }
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .section-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .section-body { padding: 16px 18px; }
 
-    .provider-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .provider-card { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
-    .provider-card h4 { font-size:0.9rem; margin-bottom:6px; }
-    .provider-card .pv-stat { font-size:1.4rem; font-weight:700; color:var(--accent); }
-    .provider-card .pv-label { font-size:0.78rem; color:var(--faint); }
-    .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
-    .status-dot.online { background:var(--green); }
-    .status-dot.offline { background:var(--red); }
+    .provider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .provider-card {
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .provider-card h4 { font-size: 0.85rem; margin-bottom: 4px; color: var(--text-2); }
+    .provider-card .pv-stat { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+    .provider-card .pv-label { font-size: 0.72rem; color: var(--text-3); }
 
-    .log-table { width:100%; border-collapse:collapse; font-size:0.82rem; }
-    .log-table th, .log-table td { padding:8px 12px; border-bottom:1px solid var(--border); text-align:left; }
-    .log-table th { color:var(--faint); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em; }
-    .log-table td { color:var(--dim); }
-    .log-table .status-ok { color:var(--green); }
-    .log-table .status-err { color:var(--red); }
-    .log-table tbody tr:hover { background:rgba(108,140,255,0.04); }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+    .status-dot.online { background: var(--green); }
+    .status-dot.offline { background: var(--red); }
 
-    .refresh-btn { background:var(--accent); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:600; cursor:pointer; }
-    .refresh-btn:hover { filter:brightness(1.1); }
+    .health-check { display: flex; gap: 14px; flex-wrap: wrap; }
+    .health-item { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; }
+    .check-btn {
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .check-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .health-result { font-size: 0.75rem; }
 
-    .health-check { display:flex; gap:16px; flex-wrap:wrap; }
-    .health-item { display:flex; align-items:center; gap:8px; font-size:0.88rem; }
-    .health-item .check-btn { background:var(--bg); border:1px solid var(--border); color:var(--dim); padding:4px 10px; border-radius:6px; font-size:0.78rem; cursor:pointer; }
-    .health-item .check-btn:hover { border-color:var(--accent); color:var(--accent); }
-    .health-result { font-size:0.8rem; margin-left:4px; }
+    .log-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .log-table th, .log-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    .log-table th { color: var(--text-3); font-weight: 600; text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.5px; }
+    .log-table td { color: var(--text-2); }
+    .log-table .status-ok { color: var(--green); }
+    .log-table .status-err { color: var(--red); }
 
-    @media(max-width:600px) { .stats-grid { grid-template-columns:1fr 1fr; } .provider-grid { grid-template-columns:1fr; } }
+    .refresh-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .refresh-btn:hover { filter: brightness(1.1); }
+
+    @media(max-width:600px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .provider-grid { grid-template-columns: 1fr; }
+      .container { padding: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -63,36 +139,34 @@
 <div class="header">
   <h1>⚙️ TempBox Admin</h1>
   <nav>
-    <a href="index.html">← Trang chủ</a>
-    <a href="docs.html">📖 API Docs</a>
+    <a href="index.html">← App</a>
+    <a href="docs.html">API Docs</a>
   </nav>
 </div>
 
 <div class="container">
-  <!-- Stats overview -->
   <div class="stats-grid">
     <div class="stat-card green">
       <div class="stat-label">Uptime</div>
       <div class="stat-value" id="uptime">--</div>
     </div>
     <div class="stat-card blue">
-      <div class="stat-label">Tổng requests</div>
+      <div class="stat-label">Requests</div>
       <div class="stat-value" id="totalRequests">0</div>
     </div>
     <div class="stat-card orange">
-      <div class="stat-label">Email đã tạo</div>
+      <div class="stat-label">Email tạo</div>
       <div class="stat-value" id="emailsCreated">0</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Server</div>
-      <div class="stat-value" style="font-size:1rem;color:var(--green);">● Online</div>
+      <div class="stat-value" style="font-size:0.9rem;color:var(--green);">● Online</div>
     </div>
   </div>
 
-  <!-- Provider status -->
   <div class="section">
     <div class="section-head">
-      Trạng thái Provider
+      Provider Status
       <div class="health-check">
         <div class="health-item">
           <span class="status-dot" id="mailtmDot"></span> Mail.tm
@@ -122,15 +196,14 @@
     </div>
   </div>
 
-  <!-- Recent logs -->
   <div class="section">
     <div class="section-head">
-      Request Logs (gần nhất)
+      Request Logs
       <button class="refresh-btn" onclick="loadStats()">🔄 Refresh</button>
     </div>
     <div class="section-body" style="padding:0;overflow-x:auto;">
       <table class="log-table">
-        <thead><tr><th>Thời gian</th><th>Provider</th><th>Path</th><th>Status</th></tr></thead>
+        <thead><tr><th>Time</th><th>Provider</th><th>Path</th><th>Status</th></tr></thead>
         <tbody id="logBody"></tbody>
       </table>
     </div>
@@ -138,76 +211,51 @@
 </div>
 
 <script>
-  function formatUptime(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    if (h > 0) return h + "h " + m + "m";
-    if (m > 0) return m + "m " + s + "s";
-    return s + "s";
+function formatUptime(s) {
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  return h > 0 ? h + 'h ' + m + 'm' : m + 'm ' + (s % 60) + 's';
+}
+
+async function loadStats() {
+  try {
+    const res = await fetch('/admin/api/stats');
+    const d = await res.json();
+    document.getElementById('uptime').textContent = formatUptime(d.uptime);
+    document.getElementById('totalRequests').textContent = d.totalRequests;
+    document.getElementById('emailsCreated').textContent = d.emailsCreated;
+    document.getElementById('mailtmReqs').textContent = d.requestsByProvider.mailtm || 0;
+    document.getElementById('guerrillaReqs').textContent = d.requestsByProvider.guerrilla || 0;
+    document.getElementById('logBody').innerHTML = d.recentLogs.map(l => {
+      const t = new Date(l.time).toLocaleTimeString('vi-VN');
+      return `<tr><td>${t}</td><td>${l.provider||'-'}</td><td>${l.path||'-'}</td><td class="${l.status<400?'status-ok':'status-err'}">${l.status}</td></tr>`;
+    }).join('');
+  } catch(e) { console.error(e); }
+}
+
+async function checkProvider(name) {
+  const dot = document.getElementById(name + 'Dot');
+  const result = document.getElementById(name + 'Result');
+  result.textContent = '...';
+  result.style.color = 'var(--text-2)';
+  try {
+    const url = name === 'mailtm' ? '/api/mailtm/domains?page=1' : '/api/guerrilla?f=get_email_address';
+    const start = Date.now();
+    const res = await fetch(url);
+    const ms = Date.now() - start;
+    dot.className = 'status-dot ' + (res.ok ? 'online' : 'offline');
+    result.textContent = res.ok ? ms + 'ms ✓' : 'HTTP ' + res.status;
+    result.style.color = res.ok ? 'var(--green)' : 'var(--red)';
+  } catch(e) {
+    dot.className = 'status-dot offline';
+    result.textContent = 'Offline';
+    result.style.color = 'var(--red)';
   }
+}
 
-  async function loadStats() {
-    try {
-      const res = await fetch("/admin/api/stats");
-      const data = await res.json();
-
-      document.getElementById("uptime").textContent = formatUptime(data.uptime);
-      document.getElementById("totalRequests").textContent = data.totalRequests;
-      document.getElementById("emailsCreated").textContent = data.emailsCreated;
-      document.getElementById("mailtmReqs").textContent = data.requestsByProvider.mailtm || 0;
-      document.getElementById("guerrillaReqs").textContent = data.requestsByProvider.guerrilla || 0;
-
-      const tbody = document.getElementById("logBody");
-      tbody.innerHTML = data.recentLogs.map((log) => {
-        const time = new Date(log.time).toLocaleTimeString("vi-VN");
-        const statusClass = log.status < 400 ? "status-ok" : "status-err";
-        return `<tr><td>${time}</td><td>${log.provider || "-"}</td><td>${log.path || "-"}</td><td class="${statusClass}">${log.status}</td></tr>`;
-      }).join("");
-    } catch (e) {
-      console.error("Failed to load stats:", e);
-    }
-  }
-
-  async function checkProvider(name) {
-    const dot = document.getElementById(name + "Dot");
-    const result = document.getElementById(name + "Result");
-    result.textContent = "checking...";
-    result.style.color = "var(--dim)";
-
-    try {
-      let url;
-      if (name === "mailtm") url = "/api/mailtm/domains?page=1";
-      else url = "/api/guerrilla?f=get_email_address";
-
-      const start = Date.now();
-      const res = await fetch(url);
-      const ms = Date.now() - start;
-
-      if (res.ok) {
-        dot.className = "status-dot online";
-        result.textContent = ms + "ms ✓";
-        result.style.color = "var(--green)";
-      } else {
-        dot.className = "status-dot offline";
-        result.textContent = "HTTP " + res.status + " ✗";
-        result.style.color = "var(--red)";
-      }
-    } catch (e) {
-      dot.className = "status-dot offline";
-      result.textContent = "Offline ✗";
-      result.style.color = "var(--red)";
-    }
-  }
-
-  // Auto refresh every 5s
-  loadStats();
-  setInterval(loadStats, 5000);
-
-  // Initial health check
-  checkProvider("mailtm");
-  checkProvider("guerrilla");
+loadStats();
+setInterval(loadStats, 5000);
+checkProvider('mailtm');
+checkProvider('guerrilla');
 </script>
-
 </body>
 </html>

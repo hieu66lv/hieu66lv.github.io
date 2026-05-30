@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TempBox · Email tạm thời miễn phí</title>
-  <meta name="description" content="Tạo địa chỉ email tạm thời miễn phí trong vài giây. Nhận email xác minh, bảo vệ hộp thư chính khỏi spam." />
-  <link rel="stylesheet" href="styles.css?v=9" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📬</text></svg>" />
+  <meta name="description" content="Tạo email tạm thời miễn phí trong vài giây. Nhận mã xác minh, bảo vệ hộp thư chính khỏi spam.">
+  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📬</text></svg>">
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>
@@ -17,87 +17,85 @@
       <span class="brand-name">TempBox</span>
     </div>
     <nav class="header-actions">
-      <a class="ghost-link" href="docs.html">📖 API Docs</a>
-      <a class="ghost-link" href="admin.html">⚙️ Admin</a>
-      <button id="soundToggle" class="icon-btn" title="Bật/tắt âm thanh thông báo" aria-label="Âm thanh">🔔</button>
-      <button id="themeToggle" class="icon-btn" title="Đổi giao diện" aria-label="Đổi giao diện">🌙</button>
+      <a class="ghost-link" href="docs.html">API Docs</a>
+      <button id="soundToggle" class="icon-btn" title="Âm thanh" aria-label="Âm thanh">🔔</button>
+      <button id="themeToggle" class="icon-btn" title="Giao diện" aria-label="Giao diện">🌙</button>
     </nav>
   </header>
 
   <main class="container">
     <section class="hero">
-      <h1>Email tạm thời, <span class="accent">không cần đăng ký</span></h1>
-      <p class="subtitle">Tạo địa chỉ email dùng một lần để nhận thư xác minh và tránh spam. Hộp thư tự động làm mới.</p>
+      <h1>Email tạm thời, <span class="accent">miễn phí</span></h1>
+      <p class="subtitle">Tạo email dùng một lần để nhận mã xác minh. Không đăng ký, tự động làm mới.</p>
     </section>
 
-    <!-- Email address card -->
-    <section class="email-card" aria-label="Địa chỉ email của bạn">
-      <div class="email-label">Địa chỉ email của bạn · <span id="providerName"></span></div>
+    <!-- Email Card -->
+    <section class="email-card" aria-label="Địa chỉ email">
+      <div class="email-label">Địa chỉ email · <span id="providerName"></span></div>
       <div class="email-row">
         <div class="email-display">
           <span id="emailAddress" class="email-text">Đang tạo email…</span>
           <span id="emailSpinner" class="spinner"></span>
         </div>
         <div class="email-buttons">
-          <button id="copyBtn" class="btn btn-primary" disabled title="Sao chép (C)">
+          <button id="copyBtn" class="btn btn-primary" disabled>
             <span class="btn-icon">📋</span><span class="btn-label">Sao chép</span>
           </button>
-          <button id="qrBtn" class="btn btn-secondary" disabled title="Hiện QR Code (Q)">
+          <button id="qrBtn" class="btn btn-secondary" disabled>
             <span class="btn-icon">📱</span><span class="btn-label">QR</span>
           </button>
-          <button id="shareBtn" class="btn btn-secondary" disabled title="Chia sẻ link (S)">
+          <button id="shareBtn" class="btn btn-secondary" disabled>
             <span class="btn-icon">🔗</span><span class="btn-label">Chia sẻ</span>
           </button>
-          <button id="refreshBtn" class="btn btn-secondary" disabled title="Làm mới (R) · Nhấn đúp = chế độ nhanh 3s">
+          <button id="refreshBtn" class="btn btn-secondary" disabled>
             <span class="btn-icon">🔄</span><span class="btn-label">Làm mới</span>
           </button>
-          <button id="newBtn" class="btn btn-secondary" disabled title="Tạo email mới (N)">
-            <span class="btn-icon">✨</span><span class="btn-label">Email mới</span>
+          <button id="newBtn" class="btn btn-secondary" disabled>
+            <span class="btn-icon">✨</span><span class="btn-label">Mới</span>
           </button>
         </div>
       </div>
       <div class="email-meta">
         <span id="statusDot" class="status-dot"></span>
         <span id="statusText">Đang khởi tạo…</span>
-        <span class="auto-refresh">· Tự động làm mới mỗi <span id="countdown">10</span>s</span>
+        <span class="auto-refresh">· Làm mới mỗi <span id="countdown">10</span>s</span>
         <span class="stat-separator">·</span>
         <span class="stat-info">Đã nhận: <strong id="totalReceived">0</strong></span>
         <span class="stat-separator">·</span>
-        <select id="autoDeleteSelect" class="auto-delete-select" title="Tự xóa email cũ">
+        <select id="autoDeleteSelect" class="auto-delete-select">
           <option value="0">Không tự xóa</option>
-          <option value="5">Xóa sau 5 phút</option>
-          <option value="10">Xóa sau 10 phút</option>
-          <option value="30">Xóa sau 30 phút</option>
-          <option value="60">Xóa sau 1 giờ</option>
+          <option value="5">Xóa sau 5p</option>
+          <option value="10">Xóa sau 10p</option>
+          <option value="30">Xóa sau 30p</option>
         </select>
       </div>
     </section>
 
     <!-- History -->
     <section class="history-bar" id="historyBar" style="display:none;">
-      <div class="history-label">📜 Lịch sử email đã tạo:</div>
+      <div class="history-label">📜 Lịch sử:</div>
       <div class="history-list" id="historyList"></div>
     </section>
 
-    <!-- Inbox toolbar -->
+    <!-- Inbox -->
     <section class="inbox" aria-label="Hộp thư đến">
       <div class="inbox-header">
         <h2>Hộp thư đến <span id="inboxCount" class="count-badge">0</span></h2>
         <div class="inbox-tools">
-          <input type="text" id="searchInput" class="search-input" placeholder="🔍 Tìm kiếm email…" />
-          <button id="deleteAllBtn" class="btn-sm btn-danger" disabled title="Xóa tất cả">🗑️ Xóa tất cả</button>
+          <input type="text" id="searchInput" class="search-input" placeholder="🔍 Tìm kiếm…">
+          <button id="deleteAllBtn" class="btn-sm btn-danger" disabled>🗑️ Xóa tất cả</button>
         </div>
       </div>
       <ul id="messageList" class="message-list"></ul>
       <div id="emptyState" class="empty-state">
         <div class="empty-icon">📭</div>
-        <p class="empty-title">Chưa có email nào</p>
-        <p class="empty-sub">Email gửi đến địa chỉ trên sẽ hiện ở đây ngay lập tức.</p>
+        <p class="empty-title">Chưa có email</p>
+        <p class="empty-sub">Email gửi đến sẽ hiện ở đây ngay lập tức.</p>
       </div>
     </section>
   </main>
 
-  <!-- Message viewer modal -->
+  <!-- Message Modal -->
   <div id="modalOverlay" class="modal-overlay" style="display:none;">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalSubject">
       <div class="modal-head">
@@ -107,10 +105,10 @@
           <div class="modal-date" id="modalDate"></div>
         </div>
         <div class="modal-actions">
-          <button id="modalDownload" class="icon-btn" title="Tải xuống .eml">💾</button>
+          <button id="modalDownload" class="icon-btn" title="Tải .eml">💾</button>
           <button id="modalForward" class="icon-btn" title="Sao chép nội dung">📤</button>
-          <button id="modalDelete" class="icon-btn" title="Xóa email">🗑️</button>
-          <button id="modalClose" class="icon-btn modal-close-btn" aria-label="Đóng" type="button">✕</button>
+          <button id="modalDelete" class="icon-btn" title="Xóa">🗑️</button>
+          <button id="modalClose" class="icon-btn modal-close-btn" aria-label="Đóng">✕</button>
         </div>
       </div>
       <div id="modalBody" class="modal-body"></div>
@@ -122,12 +120,12 @@
     <div class="modal qr-modal">
       <div class="modal-head">
         <div class="modal-meta"><h3 class="modal-subject">QR Code</h3></div>
-        <button id="qrClose" class="icon-btn modal-close-btn" aria-label="Đóng" type="button">✕</button>
+        <button id="qrClose" class="icon-btn modal-close-btn" aria-label="Đóng">✕</button>
       </div>
       <div class="qr-body">
         <canvas id="qrCanvas"></canvas>
         <p class="qr-address" id="qrAddress"></p>
-        <p class="qr-hint">Quét mã QR để lấy địa chỉ email</p>
+        <p class="qr-hint">Quét mã để lấy địa chỉ email</p>
       </div>
     </div>
   </div>
@@ -136,10 +134,10 @@
   <div id="toast" class="toast" style="display:none;"></div>
 
   <footer class="site-footer">
-    <p>TempBox hỗ trợ <strong>Mail.tm</strong> &amp; <strong>Guerrilla Mail</strong>. Đừng dùng cho mục đích quan trọng.</p>
-    <p class="shortcuts-hint">⌨️ Phím tắt: <kbd>C</kbd> Sao chép · <kbd>N</kbd> Email mới · <kbd>R</kbd> Làm mới · <kbd>Q</kbd> QR · <kbd>S</kbd> Chia sẻ · <kbd>/</kbd> Tìm kiếm · <kbd>Esc</kbd> Đóng</p>
+    <p>TempBox — Hỗ trợ Mail.tm & Guerrilla Mail</p>
+    <p class="shortcuts-hint"><kbd>C</kbd> Sao chép · <kbd>N</kbd> Email mới · <kbd>R</kbd> Làm mới · <kbd>Q</kbd> QR · <kbd>/</kbd> Tìm · <kbd>Esc</kbd> Đóng</p>
   </footer>
 
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>
