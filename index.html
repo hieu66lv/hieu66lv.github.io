@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -17,6 +17,20 @@
             font-weight: 600;
         }
 
+        .vn-clock {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(245, 166, 35, 0.1);
+            border: 1px solid #f5a623;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            color: #f5a623;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .vn-clock .clock-label { font-size: 0.65rem; color: #8892b0; display: block; text-align: center; }
         .header {
             background: linear-gradient(135deg, #1a1f3a 0%, #0d1025 100%);
             border-bottom: 2px solid #f5a623;
@@ -572,10 +586,44 @@
             .heroes-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             .skins-grid { grid-template-columns: repeat(2, 1fr); }
         }
+            .vn-clock {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 1px solid #f5a623;
+            border-radius: 10px;
+            padding: 8px 14px;
+            z-index: 999;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+        .vn-clock .clock-time {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f5a623;
+            letter-spacing: 1px;
+        }
+        .vn-clock .clock-label {
+            font-size: 0.65rem;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    .vn-clock { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); background: rgba(245,166,35,0.15); border: 1px solid #f5a623; border-radius: 10px; padding: 8px 14px; font-size: 0.95rem; color: #f5a623; font-weight: 700; letter-spacing: 0.5px; } .header { position: relative; }
     </style>
 </head>
 <body>
+        <div class="vn-clock">
+        <div class="clock-label">VN Time</div>
+        <div class="clock-time" id="vnClock">--:--:--</div>
+    </div>
     <div class="header">
+        <div class="vn-clock" id="vnClock"></div><div id="vnClock" style="position:absolute;top:12px;right:20px;font-size:0.85rem;color:#f5a623;font-weight:700;text-shadow:0 0 8px rgba(245,166,35,0.3);"></div>
+        <div class="vn-clock">
+            <span class="clock-label">VN Time</span>
+            <span id="vnClock">--:--:--</span>
+        </div>
         <h1>&#9876; Liên Quân Mobile - Tướng & Trang Phục</h1>
         <p>128 tướng &bull; 1185 trang phục</p>
         <div class="search-container">
@@ -1052,5 +1100,27 @@
 
         document.getElementById('searchInput').addEventListener('input', filterAndSearch);
     </script>
+    <script>
+    function updateVNClock() {
+        var now = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        document.getElementById('vnClock').textContent = now;
+    }
+    updateVNClock();
+    setInterval(updateVNClock, 1000);
+    </script>
+    <script>
+    function updateVNClock() {
+        var now = new Date().toLocaleTimeString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour12: false });
+        document.getElementById('vnClock').textContent = now;
+    }
+    updateVNClock();
+    setInterval(updateVNClock, 1000);
+    </script>
+<script>
+function updateVNClock(){var d=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Ho_Chi_Minh"}));var h=String(d.getHours()).padStart(2,"0");var m=String(d.getMinutes()).padStart(2,"0");var s=String(d.getSeconds()).padStart(2,"0");var day=String(d.getDate()).padStart(2,"0");var mon=String(d.getMonth()+1).padStart(2,"0");document.getElementById("vnClock").innerHTML="&#128339; "+h+":"+m+":"+s+" | "+day+"/"+mon+"/"+d.getFullYear();}updateVNClock();setInterval(updateVNClock,1000);
+</script>
+<script>function updateVNClock(){var d=new Date().toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});var date=new Date().toLocaleDateString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',weekday:'short',day:'2-digit',month:'2-digit'});document.getElementById('vnClock').innerHTML='&#128339; '+d+'<br><span style=font-size:0.75rem;opacity:0.8>'+date+'</span>';}updateVNClock();setInterval(updateVNClock,1000);</script>
 </body>
 </html>
+
+
