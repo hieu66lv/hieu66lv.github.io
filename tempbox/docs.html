@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TempBox API Docs · Hướng dẫn tích hợp</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📬</text></svg>" />
+  <style>
+    :root {
+      --bg: #0f1117;
+      --card: #1b1f2b;
+      --border: #2a2f3e;
+      --text: #e7eaf0;
+      --text-dim: #9aa3b2;
+      --text-faint: #6b7384;
+      --accent: #6c8cff;
+      --accent-2: #9d6cff;
+      --green: #38d39f;
+      --red: #ff6b6b;
+      --orange: #ffb347;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 0;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .top-bar {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .top-bar .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+    .top-bar nav { display: flex; gap: 20px; font-size: 0.9rem; }
+
+    .wrapper { display: flex; max-width: 1200px; margin: 0 auto; }
+    .sidebar {
+      width: 240px;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      padding: 24px 16px;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sidebar h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin: 16px 0 8px; }
+    .sidebar a {
+      display: block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar a:hover { background: var(--card); color: var(--text); text-decoration: none; }
+
+    .content { flex: 1; padding: 40px 48px 80px; max-width: 820px; }
+    .content h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .content h2 { font-size: 1.4rem; font-weight: 700; margin: 48px 0 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .content h3 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; color: var(--accent); }
+    .content p { margin: 10px 0; color: var(--text-dim); }
+    .content ul, .content ol { margin: 10px 0 10px 24px; color: var(--text-dim); }
+    .content li { margin: 4px 0; }
+    .content strong { color: var(--text); }
+    .content table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem; }
+    .content th, .content td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+    .content th { background: var(--card); color: var(--text); font-weight: 600; }
+    .content td { color: var(--text-dim); }
+
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .badge-get { background: rgba(56, 211, 159, 0.15); color: var(--green); }
+    .badge-post { background: rgba(108, 140, 255, 0.15); color: var(--accent); }
+
+    .endpoint-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 0.9rem;
+    }
+    .endpoint-body { padding: 18px; }
+    .endpoint-body p { margin: 0 0 12px; }
+
+    pre {
+      background: #141720;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-dim);
+      margin: 12px 0;
+    }
+    code {
+      font-family: "Cascadia Code", Consolas, monospace;
+      background: rgba(108, 140, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+
+    .note {
+      background: rgba(108, 140, 255, 0.08);
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+    .warning {
+      background: rgba(255, 107, 107, 0.08);
+      border-left: 3px solid var(--red);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+
+    .try-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .try-btn:hover { filter: brightness(1.1); }
+
+    .result-box {
+      background: #0d0f14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 10px;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 0.82rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: var(--green);
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { padding: 24px 16px 60px; }
+      .wrapper { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">📬 TempBox API</div>
+  <nav>
+    <a href="index.html">← Trang chủ</a>
+    <a href="#overview">Tổng quan</a>
+    <a href="#mailtm">Mail.tm</a>
+    <a href="#guerrilla">Guerrilla</a>
+  </nav>
+</div>
+
+<div class="wrapper">
+  <aside class="sidebar">
+    <h4>Bắt đầu</h4>
+    <a href="#overview">Tổng quan</a>
+    <a href="#base-url">Base URL</a>
+    <a href="#rate-limits">Rate Limits</a>
+
+    <h4>Mail.tm</h4>
+    <a href="#mailtm-domains">Lấy domain</a>
+    <a href="#mailtm-create">Tạo tài khoản</a>
+    <a href="#mailtm-token">Lấy token</a>
+    <a href="#mailtm-messages">Danh sách email</a>
+    <a href="#mailtm-read">Đọc email</a>
+
+    <h4>Guerrilla Mail</h4>
+    <a href="#guerrilla-create">Tạo email</a>
+    <a href="#guerrilla-check">Kiểm tra hộp thư</a>
+    <a href="#guerrilla-read">Đọc email</a>
+    <a href="#guerrilla-change">Đổi tên email</a>
+
+    <h4>Ví dụ</h4>
+    <a href="#example-js">JavaScript</a>
+    <a href="#example-python">Python</a>
+    <a href="#example-curl">cURL</a>
+  </aside>
+
+  <main class="content">
+    <h1>Hướng dẫn tích hợp API</h1>
+    <p>TempBox cung cấp proxy API miễn phí cho 2 dịch vụ email tạm thời. Không cần API key, không cần đăng ký. Tích hợp vào ứng dụng của bạn chỉ trong vài phút.</p>
+
+    <!-- OVERVIEW -->
+    <h2 id="overview">Tổng quan</h2>
+    <table>
+      <tr><th>Provider</th><th>Endpoint</th><th>Đặc điểm</th></tr>
+      <tr><td><strong>Mail.tm</strong></td><td><code>/api/mailtm/*</code></td><td>REST API chuẩn, cần tạo account + token</td></tr>
+      <tr><td><strong>Guerrilla Mail</strong></td><td><code>/api/guerrilla?...</code></td><td>Đơn giản, chỉ cần GET request</td></tr>
+    </table>
+
+    <h3 id="base-url">Base URL</h3>
+    <pre>http://localhost:3000</pre>
+    <p>Tất cả endpoint bên dưới đều relative với base URL này.</p>
+
+    <h3 id="rate-limits">Rate Limits</h3>
+    <table>
+      <tr><th>Provider</th><th>Giới hạn</th></tr>
+      <tr><td>Mail.tm</td><td>8 requests/giây/IP</td></tr>
+      <tr><td>Guerrilla Mail</td><td>~10 requests/giây</td></tr>
+    </table>
+
+    <!-- MAIL.TM -->
+    <h2 id="mailtm">Mail.tm API</h2>
+    <p>Mail.tm sử dụng REST API chuẩn. Quy trình: lấy domain → tạo account → lấy token → đọc email.</p>
+
+    <h3 id="mailtm-domains">Lấy danh sách domain</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span>/api/mailtm/domains?page=1</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Trả về danh sách domain có thể dùng để tạo email.</p>
+        <strong>Response:</strong>
+        <pre>{
+  "hydra:member": [
+    {
+      "id": "abc123",
+      "domain": "wshu.net",
+      "isActive": true
+    }
+  ]
+}</pre>
+        <button class="try-btn" onclick="tryApi(this, '/api/mailtm/domains?page=1')">▶ Thử ngay</button>
+        <div class="result-box"></div>
+      </div>
+    </div>
+
+    <h3 id="mailtm-create">Tạo tài khoản email</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-post">POST</span>
+        <span>/api/mailtm/accounts</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Tạo một địa chỉ email mới. <code>address</code> phải dùng domain từ bước trên.</p>
+        <strong>Request Body:</strong>
+        <pre>{
+  "address": "tenban@wshu.net",
+  "password": "matkhau_batky"
+}</pre>
+        <strong>Response:</strong> <code>201 Created</code>
+        <pre>{
+  "id": "/accounts/abc123",
+  "address": "tenban@wshu.net"
+}</pre>
+      </div>
+    </div>
+
+    <h3 id="mailtm-token">Lấy token xác thực</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-post">POST</span>
+        <span>/api/mailtm/token</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Dùng email + password vừa tạo để lấy JWT token.</p>
+        <strong>Request Body:</strong>
+        <pre>{
+  "address": "tenban@wshu.net",
+  "password": "matkhau_batky"
+}</pre>
+        <strong>Response:</strong>
+        <pre>{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "id": "/accounts/abc123"
+}</pre>
+        <div class="note">💡 Dùng token này trong header <code>Authorization: Bearer &lt;token&gt;</code> cho các request tiếp theo.</div>
+      </div>
+    </div>
+
+    <h3 id="mailtm-messages">Lấy danh sách email</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span>/api/mailtm/messages?page=1</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Yêu cầu header: <code>Authorization: Bearer &lt;token&gt;</code></p>
+        <strong>Response:</strong>
+        <pre>{
+  "hydra:member": [
+    {
+      "id": "msg_id",
+      "from": { "name": "Facebook", "address": "no-reply@fb.com" },
+      "subject": "Mã xác minh: 123456",
+      "intro": "Mã của bạn là 123456...",
+      "seen": false,
+      "createdAt": "2026-05-31T10:00:00+00:00"
+    }
+  ]
+}</pre>
+      </div>
+    </div>
+
+    <h3 id="mailtm-read">Đọc nội dung email</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span>/api/mailtm/messages/{id}</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Yêu cầu header: <code>Authorization: Bearer &lt;token&gt;</code></p>
+        <strong>Response:</strong>
+        <pre>{
+  "id": "msg_id",
+  "from": { "name": "Facebook", "address": "no-reply@fb.com" },
+  "subject": "Mã xác minh",
+  "text": "Mã của bạn là 123456",
+  "html": ["&lt;html&gt;...&lt;/html&gt;"],
+  "createdAt": "2026-05-31T10:00:00+00:00"
+}</pre>
+      </div>
+    </div>
+
+    <!-- GUERRILLA -->
+    <h2 id="guerrilla">Guerrilla Mail API</h2>
+    <p>Guerrilla Mail đơn giản hơn — chỉ cần GET request với query params. Lưu <code>sid_token</code> để dùng cho các request tiếp theo.</p>
+
+    <h3 id="guerrilla-create">Tạo email mới</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span>/api/guerrilla?f=get_email_address</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Tạo một địa chỉ email ngẫu nhiên.</p>
+        <strong>Response:</strong>
+        <pre>{
+  "email_addr": "abc123@guerrillamailblock.com",
+  "email_timestamp": 1780168629,
+  "sid_token": "session_token_day"
+}</pre>
+        <div class="note">💡 Lưu <code>sid_token</code> — cần dùng cho mọi request tiếp theo.</div>
+        <button class="try-btn" onclick="tryApi(this, '/api/guerrilla?f=get_email_address')">▶ Thử ngay</button>
+        <div class="result-box"></div>
+      </div>
+    </div>
+
+    <h3 id="guerrilla-check">Kiểm tra hộp thư</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span>/api/guerrilla?f=check_email&amp;seq=0&amp;sid_token=TOKEN</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Kiểm tra email mới. <code>seq</code> là sequence number (dùng 0 để lấy tất cả).</p>
+        <strong>Response:</strong>
+        <pre>{
+  "list": [
+    {
+      "mail_id": "12345",
+      "mail_from": "no-reply@example.com",
+      "mail_subject": "Verify your account",
+      "mail_excerpt": "Your code is...",
+      "mail_timestamp": "1780168700",
+      "mail_read": "0"
+    }
+  ],
+  "sid_token": "updated_token"
+}</pre>
+      </div>
+    </div>
+
+    <h3 id="guerrilla-read">Đọc nội dung email</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span>/api/guerrilla?f=fetch_email&amp;email_id=ID&amp;sid_token=TOKEN</span>
+      </div>
+      <div class="endpoint-body">
+        <strong>Response:</strong>
+        <pre>{
+  "mail_id": "12345",
+  "mail_from": "no-reply@example.com",
+  "mail_subject": "Verify your account",
+  "mail_body": "&lt;html&gt;Your code is 654321&lt;/html&gt;",
+  "mail_date": "2026-05-31 10:00:00"
+}</pre>
+      </div>
+    </div>
+
+    <h3 id="guerrilla-change">Đổi tên email</h3>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="badge badge-get">GET</span>
+        <span>/api/guerrilla?f=set_email_user&amp;email_user=TENBAN&amp;sid_token=TOKEN</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Đổi phần trước @ thành tên bạn muốn.</p>
+        <strong>Response:</strong>
+        <pre>{
+  "email_addr": "tenban@guerrillamailblock.com",
+  "sid_token": "updated_token"
+}</pre>
+      </div>
+    </div>
+
+    <!-- EXAMPLES -->
+    <h2 id="example-js">Ví dụ: JavaScript</h2>
+    <pre>// === Mail.tm: Tạo email + đọc inbox ===
+async function demoMailTm() {
+  // 1. Lấy domain
+  const domains = await fetch('/api/mailtm/domains?page=1').then(r => r.json());
+  const domain = domains['hydra:member'][0].domain;
+
+  // 2. Tạo account
+  const address = 'user' + Date.now() + '@' + domain;
+  const password = 'Pass1234';
+  await fetch('/api/mailtm/accounts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ address, password })
+  });
+
+  // 3. Lấy token
+  const { token } = await fetch('/api/mailtm/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ address, password })
+  }).then(r => r.json());
+
+  // 4. Đọc inbox
+  const inbox = await fetch('/api/mailtm/messages?page=1', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  }).then(r => r.json());
+
+  console.log('📧 Email:', address);
+  console.log('📬 Inbox:', inbox['hydra:member']);
+}
+
+// === Guerrilla Mail: Đơn giản hơn ===
+async function demoGuerrilla() {
+  // 1. Tạo email
+  const data = await fetch('/api/guerrilla?f=get_email_address').then(r => r.json());
+  const { email_addr, sid_token } = data;
+
+  // 2. Kiểm tra inbox
+  const inbox = await fetch(
+    '/api/guerrilla?f=check_email&amp;seq=0&amp;sid_token=' + sid_token
+  ).then(r => r.json());
+
+  console.log('📧 Email:', email_addr);
+  console.log('📬 Inbox:', inbox.list);
+}</pre>
+
+    <h2 id="example-python">Ví dụ: Python</h2>
+    <pre>import requests
+
+BASE = "http://localhost:3000"
+
+# === Mail.tm ===
+def demo_mailtm():
+    # Lấy domain
+    domains = requests.get(f"{BASE}/api/mailtm/domains?page=1").json()
+    domain = domains["hydra:member"][0]["domain"]
+
+    # Tạo account
+    address = f"test123@{domain}"
+    password = "MyPass123"
+    requests.post(f"{BASE}/api/mailtm/accounts",
+                  json={"address": address, "password": password})
+
+    # Lấy token
+    token_data = requests.post(f"{BASE}/api/mailtm/token",
+                               json={"address": address, "password": password}).json()
+    token = token_data["token"]
+
+    # Đọc inbox
+    headers = {"Authorization": f"Bearer {token}"}
+    inbox = requests.get(f"{BASE}/api/mailtm/messages?page=1", headers=headers).json()
+    print(f"Email: {address}")
+    print(f"Messages: {inbox.get('hydra:member', [])}")
+
+# === Guerrilla Mail ===
+def demo_guerrilla():
+    # Tạo email
+    data = requests.get(f"{BASE}/api/guerrilla?f=get_email_address").json()
+    email = data["email_addr"]
+    sid = data["sid_token"]
+
+    # Kiểm tra inbox
+    inbox = requests.get(f"{BASE}/api/guerrilla?f=check_email&amp;seq=0&amp;sid_token={sid}").json()
+    print(f"Email: {email}")
+    print(f"Messages: {inbox.get('list', [])}")
+
+demo_mailtm()
+demo_guerrilla()</pre>
+
+    <h2 id="example-curl">Ví dụ: cURL</h2>
+    <pre># Guerrilla Mail — tạo email
+curl "http://localhost:3000/api/guerrilla?f=get_email_address"
+
+# Guerrilla Mail — kiểm tra inbox
+curl "http://localhost:3000/api/guerrilla?f=check_email&amp;seq=0&amp;sid_token=YOUR_TOKEN"
+
+# Mail.tm — lấy domain
+curl "http://localhost:3000/api/mailtm/domains?page=1"
+
+# Mail.tm — tạo account
+curl -X POST "http://localhost:3000/api/mailtm/accounts" \
+  -H "Content-Type: application/json" \
+  -d '{"address":"test@wshu.net","password":"secret123"}'
+
+# Mail.tm — lấy token
+curl -X POST "http://localhost:3000/api/mailtm/token" \
+  -H "Content-Type: application/json" \
+  -d '{"address":"test@wshu.net","password":"secret123"}'
+
+# Mail.tm — đọc inbox
+curl "http://localhost:3000/api/mailtm/messages?page=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"</pre>
+
+    <div class="warning">
+      ⚠️ <strong>Lưu ý quan trọng:</strong>
+      <ul style="margin-top:8px;">
+        <li>Email tạm thời có thể bị xóa bất kỳ lúc nào — không dùng cho việc quan trọng</li>
+        <li>Server proxy chỉ chạy local (<code>localhost:3000</code>)</li>
+        <li>Tuân thủ rate limit của từng provider</li>
+        <li>Không dùng cho mục đích bất hợp pháp</li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<script>
+async function tryApi(btn, url) {
+  const box = btn.parentElement.querySelector('.result-box');
+  box.style.display = 'block';
+  box.textContent = 'Đang gọi API...';
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    box.textContent = JSON.stringify(data, null, 2);
+  } catch (e) {
+    box.style.color = '#ff6b6b';
+    box.textContent = 'Lỗi: ' + e.message;
+  }
+}
+</script>
+
+</body>
+</html>
